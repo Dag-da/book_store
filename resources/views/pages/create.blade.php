@@ -1,6 +1,6 @@
 <x-my.layout title='Ajouter un livre'>
     <section class="py-5 max-w-6xl mx-auto">
-        <h2 class="text-white text-6xl font-medium">Ajouter un <span class="text-secondary">Livre</span></h2>
+        <h2 class="text-6xl font-medium">Ajouter un <span class="text-secondary">Livre</span></h2>
         <form action="{{ route('book.store') }}" method=POST enctype="multipart/form-data" class="">
             @csrf
             <div>
