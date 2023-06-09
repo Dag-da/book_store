@@ -43,7 +43,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+      $validated = $request->validate([
         'title' => 'required|max:30|string',
         'author' => 'required|max:30|string',
         'price' => 'required|numeric',
@@ -51,16 +51,15 @@ class BookController extends Controller
         'description' => 'required|string',
         'image' => 'required|image|mimes:png,jpg,jpeg|max:2000',
       ]);
-      
-      $validate_img = $request->file('image')->store('img');
+      $pathValidatedImage = $validated['image']->store('book-cover');
 
       Book::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'image' => $validate_img,
-        'author' => $request->author,
-        'pages' => $request->pages,
-        'price' => $request->price,
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'image' => $pathValidatedImage,
+        'author' => $validated['author'],
+        'pages' => $validated['pages'],
+        'price' => $validated['price'],
         'created_at' => now(),
       ]);
   

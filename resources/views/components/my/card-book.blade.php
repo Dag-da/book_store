@@ -18,7 +18,7 @@
     </div>
     <div>
         <div class="rounded overflow-hidden">
-            <img src='{{ asset('storage/' . $image) }}' alt='{{ $title }}'>
+            <img src='{{ asset($image) }}' alt='{{ $title }}'>
         </div>
         <h2 class="pt-6 text-xl">{{ $title }}</h2>
     </div>
