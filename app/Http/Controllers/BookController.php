@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookRequest;
+use App\Models\Author;
 use App\Models\Book;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,7 +24,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::paginate(10);
+        $books = Book::orderBy('created_at', 'desc')->paginate(10);
         return view('pages.home', compact('books'));
     }
 
@@ -41,26 +44,23 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
-      $validated = $request->validate([
-        'title' => 'required|max:30|string',
-        'author' => 'required|max:30|string',
-        'price' => 'required|numeric',
-        'pages' => 'required|integer',
-        'description' => 'required|string',
-        'image' => 'required|image|mimes:png,jpg,jpeg|max:2000',
+      // dd($request->image);
+      $pathValidatedImage = $request->image->store('book-cover');
+      $author = Author::firstOrCreate([
+        'name' => $request->author
       ]);
-      $pathValidatedImage = $validated['image']->store('book-cover');
 
       Book::create([
-        'title' => $validated['title'],
-        'description' => $validated['description'],
+        'title' => $request->title,
+        'description' => $request->description,
         'image' => $pathValidatedImage,
-        'author' => $validated['author'],
-        'pages' => $validated['pages'],
-        'price' => $validated['price'],
+        'pages' => $request->pages,
+        'price' => $request->price,
         'created_at' => now(),
+        'slug' => Str::slug($request->title),
+        'author_id' => $author->id
       ]);
   
       return redirect()
@@ -100,6 +100,7 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
+      dd($request);
         if ($request->hasFile('image')) {
             Storage::delete($book->image);
             $book->image = $request->file('image')->store('img');

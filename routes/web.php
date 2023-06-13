@@ -15,7 +15,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [BookController::class, 'index'])->name('home');
-Route::resource('book', BookController::class);
+Route::prefix('biblio')->name('book.')->controller(BookController::class)->group(function () {
+    Route::get('/ajouter', 'create')->name('create');
+    Route::post('/store', 'store')->name('store');
+    Route::get('/{book}', 'show')->name('show');
+    Route::get('/editer/{book}', 'edit')->name('edit');
+    Route::patch('/update/{book}', 'update')->name('update');
+    Route::get('/delete/{book}', 'destroy')->name('destroy');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -3,7 +3,7 @@
         <h2 class="text-6xl font-medium py-10">Modifier <span class="text-secondary">"{{ $book->title }}"</span></h2>
         <form action="{{ route('book.update', $book->id) }}" method=POST enctype="multipart/form-data" class="">
             @csrf
-            @method('PUT')
+            @method('PATCH')
             <div>
                 {{-- title --}}
                 <input type="text" class="block w-full py-4 px-5 rounded-xl border border-gray-500" name="title" placeholder="Exemple : Madame Bovary, Les Misérables..." value='{{ old('title', $book->title) }}' />

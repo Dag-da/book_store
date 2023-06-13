@@ -4,10 +4,10 @@
             <h2 class="text-6xl py-5 pl-3">{{ $book->title }}</h2>
         </div>
         <div class="px-10 flex">
-            <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}">
+            <img src="{{ asset($book->image) }}" alt="{{ $book->title }}">
             <div class="px-20">
                 <div class="flex justify-between">
-                    <em>{{ $book->author }}</em>
+                    <em>{{ $book->author->name }}</em>
                     <span class="text-xl font-bold text-red-500">{{ $book->price }}€</span>
                 </div>
                 <p>Nombre de pages : <span class="font-bold">{{ $book->pages }}</span></p>
@@ -15,10 +15,10 @@
             </div>
         </div>
             @auth
-                    <a href="{{ route('book.edit', $book->id) }}">
+                    <a href="{{ route('book.edit', ['book' => $book]) }}">
                         Modifier
                     </a>
-                    <form action={{ route('book.destroy', $book->id) }} method="POST" onsubmit="return confirm('Are you sure ?')">
+                    <form action="{{ route('book.destroy', ['book' => $book]) }}" method="POST" onsubmit="return confirm('Are you sure ?')">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-circle" type="submit">
@@ -27,5 +27,15 @@
                     </form>
             @endauth
         </div>
+    </section>
+    <section class="flex mt-24 bg-gray-100 px-20 py-10">
+        @foreach ($book->author->books->except($book->id) as $authorBook)
+        <a href="{{ route('book.show', ['book' => $authorBook]) }}">
+            <div class="w-64">
+                <strong class="text-center">{{ $authorBook->title}}</strong>
+                <img src="{{ asset($authorBook->image) }}" alt="{{ $book->title }}" class="object-cover">
+            </div>
+        </a>
+        @endforeach
     </section>
 </x-my.layout>
