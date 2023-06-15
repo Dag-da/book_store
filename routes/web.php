@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [BookController::class, 'index'])->name('home');
-Route::prefix('biblio')->name('book.')->controller(BookController::class)->group(function () {
+
+Route::prefix('auteur')->name('author.')->controller(AuthorController::class)->group(function () {
+    Route::post('/search', 'search')->name('search');
+});
+
+Route::prefix('livre')->name('book.')->controller(BookController::class)->group(function () {
     Route::get('/ajouter', 'create')->name('create');
     Route::post('/store', 'store')->name('store');
     Route::get('/{book}', 'show')->name('show');
